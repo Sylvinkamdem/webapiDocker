@@ -15,7 +15,7 @@ Rebuild the image docker build -t webapidocker .
 #The docker run command with changes made up. The command is executed in powershel.
 we'll need to pass this 
     . -p 8080:80 -p 8081:443
-    . -e ASPNETCORE_URLS="https://+,http://+" environment variable
+    . -e ASPNETCORE_URLS="https://+;http://+" environment variable
     . -e ASPNETCORE_HTTPS_PORT=8081 environment variable for https port
     . -e ASPNETCORE_ENVIRONMENT=Development
     . -v $env:APPDATA\microsoft\UserSecrets\:/root/.microsoft/usersecrets : mapping volume for usersecrets
@@ -24,3 +24,4 @@ we'll need to pass this
 
 
 #Command
+docker run --rm -it -p 8080:80 -p 8081:443 -e ASPNETCORE_URLS="https://+;http://+" -e ASPNETCORE_HTTPS_PORT=8081 -e ASPNETCORE_ENVIRONMENT=Development -v $env:APPDATA\microsoft\UserSecrets\:/root/.microsoft/usersecrets -v $env:USERPROFILE\.aspnet\https:/root/.aspnet/https/ webapidocker
