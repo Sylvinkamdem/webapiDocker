@@ -1,0 +1,26 @@
+#Command to create certificate in the image in powershel
+#you need to do this if you don't have yet a local certificate.
+
+dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\WebapiDocker.pfx -p pas55w0rd!
+dotnet dev-certs https --trust
+
+#generate usersecrets
+1 add the tag <UserSecretsId></UserSecretsId> in the csproj file
+2 insert in the tag a guid (use extension "insert guid" of vs code)
+3 generate key-pair value for the secret using the kestrel way : dotnet user-secrets set "Kestrel:Certificates:Development:Password" "pa55w0rd!"
+
+#Next step
+Rebuild the image docker build -t webapidocker .
+
+#The docker run command with changes made up. The command is executed in powershel.
+we'll need to pass this 
+    . -p 8080:80 -p 8081:443
+    . -e ASPNETCORE_URLS="https://+,http://+" environment variable
+    . -e ASPNETCORE_HTTPS_PORT=8081 environment variable for https port
+    . -e ASPNETCORE_ENVIRONMENT=Development
+    . -v $env:APPDATA\microsoft\UserSecrets\:/root/.microsoft/usersecrets : mapping volume for usersecrets
+    . -v $env:USERPROFILE\.aspnet\https:/root/.aspnet/https/   : mapping volume containing de htpps certificate générated
+    . webapidocker : the image to lunch
+
+
+#Command
